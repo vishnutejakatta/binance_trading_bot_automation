@@ -125,7 +125,7 @@ def get_historic_klines(symbol, start, end, interval):
     plt.pause(3)
     plt.close()
     '''
-    return ochl[-1][1], ochl[-1][2],ochl[-1][3],ochl[-2][3]
+    return ochl
 
 
 def Main():
