@@ -158,7 +158,7 @@ def make_csv_file(symbol):
     print(f_name+"_TESTING.csv created!")
 #--------------------------------------------------------------------------------------------------------------------
 def train(train_stock, val_stock, window_size, batch_size, ep_count,
-         strategy="t-dqn", model_name="model_double-dqn_GOOG_50", pretrained=False,
+         strategy="t-dqn", model_name="model_double-dqn_GOOG_50", pretrained=True,
          debug=False):
     """ Trains the stock trading bot using Deep Q-Learning.
     Please see https://arxiv.org/abs/1312.5602 for more details.
@@ -213,23 +213,20 @@ def evaluate_model1(agent, symbol, data, window_size, debug):
         
         elif action == 2 and len(agent.inventory) > 0:
             if agent.inventory != []:
-                m = 0
                 for i in agent.inventory:
                     temp = data[t+window_size-1] - i
-                    if temp >= 0 and temp >= m:
-                        rem = i
-                        m = temp
-                if m >= 0:
-                    pft = m
-                    agent.inventory.remove(rem)
-                    delta = pft
-                    reward = delta #max(delta, 0)
-                    total_profit += delta
+                    if temp > 0:
+                        pft = temp
+                        agent.inventory.remove(i)
+                        delta = pft
+                        reward = delta #max(delta, 0)
+                        total_profit += delta
 
-                    history.append((data[t+window_size-1], "SELL"))
-                    if debug:
-                        logging.debug("Sell at: {} | Position: {}".format(
-                            format_currency(data[t+window_size-1]), format_position(delta)))
+                        history.append((data[t+window_size-1], "SELL"))
+                        if debug:
+                            logging.debug("Sell at: {} | Position: {}".format(
+                                format_currency(data[t+window_size-1]), format_position(delta)))
+                        break
         
         else:
             history.append((data[t], "HOLD"))
@@ -277,10 +274,10 @@ if __name__ == "__main__":
     ep_count = 10
     strategy = "double-dqn"
     model_name = "model_double-dqn_GOOG_50"
-    pretrained = False
+    pretrained = True
     debug = False
     try:
-        make_csv_file(symbol)
+        #make_csv_file(symbol)
         train(train_stock, val_stock, window_size, batch_size, ep_count, strategy, model_name, pretrained, debug)
         main(symbol)
     except KeyboardInterrupt:
