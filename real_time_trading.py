@@ -280,8 +280,8 @@ if __name__ == "__main__":
     pretrained = False
     debug = False
     try:
-        #make_csv_file(symbol)
-        #train(train_stock, val_stock, window_size, batch_size, ep_count, strategy, model_name, pretrained, debug)
+        make_csv_file(symbol)
+        train(train_stock, val_stock, window_size, batch_size, ep_count, strategy, model_name, pretrained, debug)
         main(symbol)
     except KeyboardInterrupt:
         print("Aborted")
